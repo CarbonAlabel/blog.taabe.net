@@ -11,6 +11,7 @@ Instead of waiting for Squizz to get around to implementing one, I decided to tr
 One problem you might see with this approach is that the entire page isn’t just black text on white background. All the colored text and images get inverted as well. This doesn’t have to be a bad thing, as the blue links got shifted to orange, an appropriate link color for an EVE companion site. As for the images, two wrongs can make a right! The images just get inverted again, and the end result of what is really just two lines of CSS is a surprisingly nice dark mode:
 
 > ![Table of largest alliances, from the front page of EveWho, displayed in dark mode.](1_5dXjyYVjoZOBacnjcPz7Rw.png)
+>
 > How long will these alliances stay the largest alliances?
 
 So nice, in fact, that Squizz asked for a [PR](https://github.com/zKillboard/evewho/pull/6). This is the point at which I decided to put in a bit more work.

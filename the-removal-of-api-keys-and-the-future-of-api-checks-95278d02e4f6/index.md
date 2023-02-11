@@ -3,6 +3,7 @@
 Just over two months ago, a pair of dev blogs titled “[Introducing ESI — A new API for EVE Online](https://www.eveonline.com/news/view/introducing-esi)” (on the community site) and “[Introducing the ESI API](https://developers.eveonline.com/blog/article/introducing-the-esi-api)” (on the third party developers site) was released by CCP, announcing ESI: a new API designed to be a replacement for the older XML and CREST APIs, along with a target for achieving functional equivalence between the new ESI API and the two older ones, at which point the older APIs would be shut down: 18 months from release of the blog(s).
 
 > ![ESI homepage](1_wU9r712y6-Oz7f_D-XLm0g.png)
+>
 > Home page of the new API. Pretty, isn’t it?
 
 Now, we can safely assume that the API development team will run into some unexpected problems, placing the project behind schedule, and that once functional equivalence is achieved, a final warning will be sent out, giving developers who still hadn’t begun migrating to the ESI API a couple of months to do so before CREST and the XML API are shut down for good. Still, in about one and a half years from now, those two APIs are going away. What does that mean for you?
@@ -34,6 +35,7 @@ This got many people excited, but the higher level of interactivity wasn’t to 
 To solve this problem, and also provide a nice service to EVE players and third party developers alike, CCP decided to roll out their own implementation of the [OAuth 2.0](https://oauth.net/2/) standard, and [EVE SSO was born](https://www.eveonline.com/news/view/eve-online-sso-and-what-you-need-to-know). Much like you can log into your EVE account using your Facebook or Steam accounts (assuming they are connected), you could now log into third party sites and applications using your EVE account; to be precise, using one of the characters on your EVE account.
 
 > ![EVE SSO auth screen](1_AT210uQcVj3tqaNs7MJ9JQ.png)
+>
 > SSO authorization site which you will arrive to when logging into [zKillboard](https://zkillboard.com/). Notice the character selection drop down menu, and the list of scopes which were requested by the app.
 
 Whereas API keys have access masks, SSO uses scopes for access control. If you want to give an application read and write access to your contact list, you need to log into it with your EVE account, select the character for which you are providing access and authorize the application to use the scopes it requested.
@@ -45,6 +47,7 @@ This new authentication method didn’t receive a completely positive response f
 For all its benefits, the SSO had one major limitation which held back its adoption: it could only be used to access private information over the CREST API. Compared to the XML API, it severely lagged behind with regards to the amount of information which could be accessed over it. This would be taken care of with the [Citadel expansion](https://www.eveonline.com/news/view/patch-notes-for-eve-online-citadel).
 
 > ![Slack conversation](0_w1p_XP-24Hig6W9w.png)
+>
 > The integration of the SSO with the XML API was first announced in [the place where all the cool kids hang out](https://tweetfleet.slack.com/messages/devfleet/). And then quickly [posted on reddit](https://www.reddit.com/r/Eve/comments/4e3947/rip_api_keys_you_wont_be_missed/). By me. I really do have an axe to grind with those pesky API keys, don’t I?
 
 CCP Tellus did some work, making access to the XML API possible using SSO access tokens. A number of new SSO scopes was introduced, which had corresponding XML API access masks assigned to them, making private information on the XML API accessible using the SSO. It is a somewhat hacky and half-baked solution, but one that nonetheless managed to bridge the gap between the still ubiquitous XML API and the SSO.
@@ -60,6 +63,7 @@ They didn’t.
 Turns out, the lack of account level access is a no-no for the decision making people in those organizations. Why do they require account level access? **Because they can.** Account level access was the only kind of access possible with legacy API keys, so when customizable API keys were introduced, account level access was already the norm, and the difference between creating an account wide and a single character API key is a single dropdown menu on the API key creation page. It doesn’t take any extra effort, and it’s not like you [have anything to hide](https://en.wikipedia.org/wiki/Nothing_to_hide_argument).
 
 > ![API key creation dropdown](1_rHdP4ZSqWCfzp1lXTIixWg.png)
+>
 > The difference between creating a single character and an account wide API key. If you’re already signing off the soul of your firstborn, might as well make it all three of your kids!
 
 What do those organizations do with the extra information provided by the account wide API key? Not much. For most people, all the information it will reveal is the person’s two PI chars, but the assumption goes like this: a potential spy will use one of their spare character slots to create a spy character, so by performing an account wide API check, we are stopping those spies from joining us.
@@ -75,6 +79,7 @@ Not really.
 When the SSO was connected with the XML API, it was also given a single account wide scope. Its name is `characterAccountRead`, it is assigned the XML API access mask `33554432`, and it grants access to the XML API endpoint `/account/AccountStatus.xml.aspx`, which, as you may have guessed from its name, provides information about the status of your account as a whole. The output of that endpoint looks something like this:
 
 > ![XML API account status response](1_vSYYI4g99A-OuVaLpHEheQ.png)
+>
 > 155 days of time spent logged in with my main character. Not even half a year. I know, pathetic.
 
 While you can’t use that scope to explicitly get the list of characters on an account, what you can do is require potential recruits to fill all three character slots on their account, use the SSO to grant you access to all of them separately, and then visit that endpoint as each of the characters. If the info provided by that endpoint matches across the three characters, they are almost certainly on the same account.

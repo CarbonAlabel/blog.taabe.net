@@ -29,6 +29,7 @@ As announced during the [ESI — State of the API](https://drive.google.com/file
 One of the guiding thoughts behind the initiative was for it not to be part of [the ISD](https://volunteers.eveonline.com/). Team Tech Co wanted to avoid the strict rules and complicated reward schemes of the ISD (Do they even intend to give us some kind of rewards for our efforts?) or requiring us to sign NDA’s (If you ignore the one we already have as part of the [Developer License Agreement](https://developers.eveonline.com/license-agreement).) What we’ve got is a fairly informal group of capable individuals, which has, in the several hours it has been at work, already done some nice work.
 
 > ![Message from "CCP SnowedIn", posted in the private "esi-dev" channel on Tweetfleet Slack, with the contents: "i assume you like being in possession of both your github and eve online accounts"](1_F5dtFUfB6T-EIhoQOxLRgw.png)
+>
 > CCP SnowedIn, late last night/early this morning, responding to my question about the measures in place to stop one of us from griefing the repository. Point taken, but you still haven’t answered my question.
 
 16:18, my newly gained powers had already corrupted me, and I used them, for the first time, to close a [duplicate feature request](https://github.com/esi/esi-issues/issues/919) in esi-issues.

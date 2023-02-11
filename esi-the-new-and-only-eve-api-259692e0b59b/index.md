@@ -17,6 +17,7 @@ First, a bit of background.
 The XML API was the oldest of the three. Originally, it was known just as the EVE API, as, at the time, game APIs were a rarity. Only once the newer APIs were released did it really get that name, after XML, the file format which it returned, compared to the more modern JSON. It was read-only, and was able to provide information about many aspect of your characters and corporations, but was heavily limited by the fact that it interfaced directly with EVE’s database, and had no contact with the game servers themselves. As a result, it sometimes returned stale data (and there was some data it couldn’t get to), no kind of write access was possible (in theory, it would have been possible, but wouldn’t be a great idea), and used quite heavy cache times and rate limits, to limit the impact it had on performance of the database (though both could be bypassed without too much effort).
 
 > ![CREST root](1_XIhz_kWRUNc2xtuHWYrzBw.png)
+>
 > The root endpoint of CREST. Every other endpoint was possible to reach from this one by following the links, assuming certain in-game conditions were met.
 
 CREST was the more recent API, designed with read/write access in mind (this write access was first used to integrate now dead [Dust 514](https://en.wikipedia.org/wiki/Dust_514) into the EVE Online universe), and was able to communicate directly with the game servers, opening up many new possibilities. Its name was shorthand for Carbon RESTful API (Carbon being the name of the framework EVE is built upon), and as suggested by it, it followed many of the RESTful API design principles, making usage of the API much easier, or in some cases, harder. It paved the way for many new features, such as self-documentation (no matter how incomplete and complicated to access it was), availability of various static and public data (the XML API mostly provided private data), writable endpoints (even if only two, contacts and fittings, were made available at first), remote UI endpoints (viewed by many as a regression from the in-game browser and the functionality available in it), and many more.
@@ -26,6 +27,7 @@ There was one major problem with it: structurally, it was a part of the game ser
 Aside from that, it lacked equivalents for a majority of the XML API’s many endpoints, meaning any serious app developer would likely have to rely on both of the API’s, preventing CREST from establishing itself as a proper replacement for the XML API.
 
 > ![ESI UI](1_AnKmAN_VC1aIOfngxb9WBg.png)
+>
 > The [new ESI UI](https://esi.evetech.net/ui/). Open it next to the [old one](https://esi.evetech.net/latest/), and play spot the differences.
 
 Then we get to ESI, or the EVE Swagger Interface. To put it simply, ESI was designed to do everything the XML API and CREST (also some more minor APIs, such as the yearly character stats API, which was in its own way, [a precursor to ESI](https://github.com/esi/esi-issues/issues/121#issuecomment-263599034)) used to do, and to do it better. As [described by CCP](https://www.eveonline.com/news/view/introducing-esi):
@@ -65,6 +67,7 @@ And with only 5 days to spare before the shutdown!
 After the announcement, not everyone switched immediately to ESI. At the time, it lacked all the features required to replace both the XML API and CREST, and even after ESI reached that point, it would take time for app developers to actually migrate their apps. Looking at the chart of historical usage, you might notice some interesting patterns.
 
 > ![API usage ratio chart](1_D3qwf6qtxxL1zcgUIvv0ow.png)
+>
 > Usage chart of the three APIs, primarily based on historical updates provided by [CCP SnowedIn on Twitter](https://twitter.com/CCP_SnowedIn). Time axis not to scale, some values estimated.
 
 The usage of CREST remained fairly stable throughout the transition period, while the XML API usage fell a bit more quickly, and they both started falling more rapidly after ESI reached near parity for that API. But can any useful information be gleaned from this chart? Not really.
@@ -80,6 +83,7 @@ Then there’s ESI. Again, you start by getting the list of all alliances. They 
 To sum up: 1 request with the XML API, around 3 000 for CREST, and almost 20 000 if you’re using ESI, which we now all are.
 
 > ![API request count chart](1_2YfJ_m19cnlaSU-lj5kDZw.png)
+>
 > Another chart, illustrating the amount of requests you might need to make to the different APIs in order to get the same information, because why not.
 
 This might be a bit of an edge case, but it’s still a representative one. There is one other fact that contributes to the meaningness of request counts as a metric for comparing usage of different APIs. CREST and ESI make available a lot more information, on much shorter cache times. Two such examples are public market data, and character location data.
@@ -99,6 +103,7 @@ The XML API had a rate limit of 30 requests per second, which, while not insanel
 ESI raised the bar even further, by having no rate limit! Developers could shower ESI with as many requests as they wanted, whenever they wanted, not having to worry about rate limits or avoiding them by using multiple IP addresses. Many developers did exactly that, and ESI handled it well, but it wouldn’t stay like that forever. After several months of no rate limits whatsoever, ESI was graced with an [error rate limit](https://developers.eveonline.com/blog/article/error-limiting-imminent), while still having no general rate limit. This error rate limit was set to 100 errors per minute, with the ban lasting only until the end of the minute, and still remains at those levels today. Those who didn’t make faulty requests or cause a ton of errors could still make requests to their hearts’ desire, while ESI’s stability would be safeguarded a bit better. Still, this particular change made many people angry. Why?
 
 > ![API rate limit chart](1_S9FVBUroTpmSL8WqRtFL3w.png)
+>
 > Another chart, probably the least informative one so far. It’s the last one, I promise!
 
 Comparing ESI’s error limit (100 errors per minute, with the ban lasting less than a minute) to that of the XML API (300 errors per 3 minutes, with a 15 minute ban), it can be noticed that ESI’s is much more gentle. That doesn’t count for much, though. As mentioned above, what took only a single request with the XML API, can take several thousands of requests with ESI, and ESI can be pretty temperamental. So, assuming ESI is having a particularly bad moment, and through no fault of your own, starts throwing timeout errors on 5% of the requests you are sending it, after only 2 000 of them, you would hit the error rate limit. For the rest of that minute, you wouldn’t be able to make any further requests, leaving you with even more requests to make the next one, not to mention retrying those that failed, which will cause you to hit the limit even sooner, with no perfect solution to getting out of the loop.
@@ -149,6 +154,7 @@ Prioritization of issues
 The proper way to report bugs and submit feature requests for ESI is over at the [esi-issues GitHub repository](https://github.com/esi/esi-issues). If you take a look, you’ll see that there are hundreds of issues already open. With so many of them, and some of the ESI team no doubt having some projects and ideas of their own, which ones are they going to get to first?
 
 > ![Reactions to a GitHub issue](1_8V0I0fZLgCgFI0RUt7PwgQ.png)
+>
 > You could say that this isn’t vote brigading, but when the top issue has almost double the thumbs up of the [next most upvoted one](https://github.com/esi/esi-issues/issues/61) (which is much more interesting) and they are mostly by users who haven’t previously participated in the repository, there isn’t much point in calling it something else.
 
 If you ask them, they’ll say that bug reports are top priority. Once the most serious of them are fixed, they will start moving onto feature requests. There are about twice as many of them as there are bugs reported, and they vary in complexity from simple ones asking for a missing property to be added to a single endpoint, to those asking for an array of endpoints to give coverage for a part of EVE which was never before available over an API. One of the things that will affect which ones they start working on first is how many [thumbs up](https://github.com/esi/esi-issues/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc) they have, so if you see one you would like to see implemented sooner rather than later, don’t be shy and give it a thumbs up! Others are already doing so! It just so happens that we’ve already had our [first case of vote brigading](https://github.com/esi/esi-issues/issues/349).
@@ -160,7 +166,8 @@ For another item of not so positive news, we’ve had the discussion in a couple
 While the SSO is not technically part of ESI, it is nonetheless an essential part of utilizing the full potential of ESI. Like ESI, SSO now has its own channel on Tweetfleet Slack, it’s own [sso-issues](https://github.com/ccpgames/sso-issues) repository on GitHub, and at least [one of the developers](https://twitter.com/stebets) working on it staying in touch with us, and having such a continued presence is the single most valuable thing they could do. As a result of that, we already know about some of the upcoming changes.
 
 > ![EVE SSO auth screen redesign](1_LCdsd10lftYTlHYF3CwVRw.png)
-Pending some of the more technical changes, the SSO authorization screen has gotten a fresh new look.
+>
+> Pending some of the more technical changes, the SSO authorization screen has gotten a fresh new look.
 
 The biggest one is the move to [JSON Web Tokens](https://jwt.io/) as the authentication method used for ESI. This change won’t affect end-users in any way, but for the developers, it will mean having to make fewer requests to the SSO, so even if the new tokens will use some extra bandwidth, the SSO as a whole might get a fair bit faster.
 
